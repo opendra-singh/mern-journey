@@ -1,6 +1,16 @@
-function isTextAnagram(str, newStr){
+function isTextAnagram(str, compareStr){
 
-    // if( str. )
+    str = str.toLowerCase();
+    compareStr = compareStr.toLowerCase();
+
+    let isAnagram = false;
+    for( i = 0; i < str.length; i++ ) {
+
+        if( compareStr.includes(str[0]) ) {
+            isAnagram = true;
+        }
+    }
+    return isAnagram;
 }
 
-isTextAnagram('Red', 'derr');
+console.log(isTextAnagram('Hello', 'oleh'));
