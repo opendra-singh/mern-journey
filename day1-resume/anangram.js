@@ -21,3 +21,5 @@ function isTextAnagram(str, compareStr){
 }
 
 console.log(isTextAnagram('abc', 'aab'));
+
+// console.log(global);
