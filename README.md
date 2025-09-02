@@ -1,9 +1,6 @@
 # mern-journey
-This repositary contains my MERN journey - each folder has its own readme that contains info about that particular folder
+This repositary contains my MERN journey 
 
-    **day0.js contains the map uses**
+**each folder has its own readme that contains info about that particular folder**
 
-Chalk library uses - ./chalk-library
-    1. created .mjs file
-    2. imported chalk library
-    3. use cases of chalk
+Note - day0.js contains the map uses
