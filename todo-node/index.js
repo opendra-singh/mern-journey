@@ -1,5 +1,4 @@
 const express = require("express");
-// const { json } = require("stream/consumers");
 const app = express();
 const fs = require('fs').promises;
 
@@ -18,34 +17,37 @@ async function writeData(content){
     await fs.writeFile('data.json', JSON.stringify(content));
 }
 
+// app.use(function(req, res, next){
+//     // console.log('op');
+//     next();
+//     // next();
+// })
+
 app.get("/", async function(req, res){
 
     let arr = await readData();
-    // console.log(arr, 'arr')
-    // if(arr == undefined) res.send('No data yet to be sent');
-    let html = '';
-    arr.map((data) => {
-        html += 'Task is - ';
-        html += data.task;
-        html += ' and done by - ';
-        html += data.done_by;
-        html += '<br>';
-        html += '<br>';
-    })
-    // console.log(html);
-    res.send(html)
+    let x;
+    var y = x.length
+    // let html = '';
+    // arr.map((data) => {
+    //     html += 'Task is - ';
+    //     html += data.task;
+    //     html += ' and done by - ';
+    //     html += data.done_by;
+    //     html += '<br>';
+    //     html += '<br>';
+    // })
+    res.json('bl bla')
 })
 
 app.post("/add/tasks", async function(req, res){
     let bodyParams = req.body;
     let arr = await readData();
-    // console.log(arr, 'opo');
     let tasks = {
         'id' : arr == null || undefined ? 1 : arr.length+1,
         'task' : bodyParams.task,
         'done_by' : bodyParams.done_by
     }
-    // console.log(tasks, 'task');
     let PushableData = [...(arr || []), tasks];
     await writeData(PushableData);
     res.send('Todo list Updated')
@@ -62,7 +64,6 @@ app.put("/update/tasks", async function(req, res){
         }
     })
     await writeData(arr);
-    // console.log(arr);
     res.send('Todo entry Updated')
 })
 
@@ -75,6 +76,21 @@ app.delete("/delete/tasks", async function(req, res){
     })
     await writeData(arr);
     res.send('entry deleted')
+})
+
+app.use(function(err, req, res, next){
+
+    if( req.method == "GET" && req.route.path == "/") {
+        
+    }
+    console.log('opp');
+    console.log();
+    console.log(err);
+    console.log('op');
+    next();
+    res.send('kkkkk');
+    // if(req.body)
+    // err.status(404).json('something is missing')
 })
 
 app.listen(3000);

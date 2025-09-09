@@ -15,3 +15,5 @@ This folder contains how i created a CLI based</br>
         b.) To update - **node index.js update 2 raj 26**[Explanation: it accepts 3 commands, first is id, sendond is new name and third is new age - sequence matters]</br>
         c.) To delete - **node index.js delete 2**[Explanation:- it accepts id and delete the data from data.json]</br>
         d.) To read - **node index.js read**[Explanation:- It will read all the json file data and prints each record.]</br>
+
+3. Implementing middleware for all requests to handle errors, manage rate limiting
