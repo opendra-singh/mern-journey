@@ -1,6 +1,8 @@
-const express = require("express");
+import {addTasksMiddleware, updateTasksMiddleware, deleteTasksMiddleware} from "./middlewares.js";
+import express from 'express';
+import fs from 'fs/promises';
+
 const app = express();
-const fs = require('fs').promises;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,30 +19,13 @@ async function writeData(content){
     await fs.writeFile('data.json', JSON.stringify(content));
 }
 
-// app.use(function(req, res, next){
-//     // console.log('op');
-//     next();
-//     // next();
-// })
-
 app.get("/", async function(req, res){
 
     let arr = await readData();
-    let x;
-    var y = x.length
-    // let html = '';
-    // arr.map((data) => {
-    //     html += 'Task is - ';
-    //     html += data.task;
-    //     html += ' and done by - ';
-    //     html += data.done_by;
-    //     html += '<br>';
-    //     html += '<br>';
-    // })
-    res.json('bl bla')
+    res.json(arr)
 })
 
-app.post("/add/tasks", async function(req, res){
+app.post("/add/tasks", addTasksMiddleware,  async function(req, res){
     let bodyParams = req.body;
     let arr = await readData();
     let tasks = {
@@ -53,7 +38,7 @@ app.post("/add/tasks", async function(req, res){
     res.send('Todo list Updated')
 })
 
-app.put("/update/tasks", async function(req, res){
+app.put("/update/tasks", updateTasksMiddleware, async function(req, res){
     let bodyParams = req.body;
     let compareId = bodyParams.id;
     let arr = await readData();
@@ -67,7 +52,7 @@ app.put("/update/tasks", async function(req, res){
     res.send('Todo entry Updated')
 })
 
-app.delete("/delete/tasks", async function(req, res){
+app.delete("/delete/tasks", deleteTasksMiddleware, async function(req, res){
     let bodyParams = req.body;
     let deleteId = bodyParams.id;
     let arr = await readData();
@@ -78,19 +63,20 @@ app.delete("/delete/tasks", async function(req, res){
     res.send('entry deleted')
 })
 
-app.use(function(err, req, res, next){
+app.use(function(req, res, next){
+    const error = new Error(`Route ${req.method} ${req.originalUrl} not found`);
+    error.status = 400;
+    error.name = 'method_not_found';
+    next(error);
+})
 
-    if( req.method == "GET" && req.route.path == "/") {
-        
+app.use(function(err, req, res, next){
+    if( err.name == "method_not_found" ) {
+        res.status(404).send(`Either endpoint is not available or endpoint with ${req.method} method is not available`);
     }
-    console.log('opp');
-    console.log();
-    console.log(err);
-    console.log('op');
-    next();
-    res.send('kkkkk');
-    // if(req.body)
-    // err.status(404).json('something is missing')
+    if( err.name == 'update_missing_fields' || err.name == 'delete_missing_fields' || err.name == 'put_missing_fields' ) {
+        res.status(404).send(err.msg);
+    }
 })
 
 app.listen(3000);
