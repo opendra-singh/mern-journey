@@ -17,6 +17,7 @@ export async function updateTasks(req, res){
     let bodyParams = req.body;
     let compareId = bodyParams.id;
     let arr = await readData();
+    
     arr.map((data) => {
         if( data.id == compareId ) {
             data.task = bodyParams.task,
@@ -27,19 +28,27 @@ export async function updateTasks(req, res){
     res.send('Todo entry Updated')
 }
 
-export async function deleteTasks (req, res){
+export async function deleteTasks ( req, res ) {
+
     let bodyParams = req.body;
-    let deleteId = bodyParams.id;
-    let arr = await readData();
+    let deleteId   = bodyParams.id;
+    let arr        = await readData();
+
     arr = arr.filter((data) => {
         return data.id != deleteId;
     })
+    
     await writeData(arr);
     res.send('entry deleted')
 }
 
 export async function getTasks(req, res){
-    console.log('opop');
     let arr = await readData();
     res.json(arr)
+}
+
+export const allRequests = async (req, res, next) => {
+
+    const { totalRequest } = req;
+    res.status(200).json(totalRequest);
 }
