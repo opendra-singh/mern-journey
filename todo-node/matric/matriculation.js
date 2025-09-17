@@ -1,9 +1,6 @@
 let totalRequest = 0;
 
-let rateLimitation = [];
-setTimeout( () => {
-    rateLimitation = [];
-}, 1000)
+let rateLimitation = {};
 
 export const reqCount = (req, res, next) => {
 
@@ -14,14 +11,28 @@ export const reqCount = (req, res, next) => {
 
 export const rateLimiting = (req, res, next) => {
 
-    const userIP = req.ip;
-    rateLimitation[userIP] = totalRequest;
+    setTimeout( () => {
+        rateLimitation = {};
+        totalRequest = 0
+    }, 5000)
 
+    let userIP = (req.ip == "::1") ? '127.0.1.1' : req.ip;
+    if(userIP.includes('::ffff:')){
+        userIP = userIP.replace("::ffff:", "");
+    }
 
-    if( rateLimitation[userIP] >=5 ) {
+    if( userIP in rateLimitation ) {
+
+        rateLimitation[userIP] = rateLimitation[userIP] + 1;
+    } else{
+        
+        rateLimitation[userIP] = 1;
+    }
+
+    if( rateLimitation[userIP] >= 5 ) {
         const err = new Error('Rate Limitaion');
         err.name = 'rate_limitation';
-        err.msg = "you have reached you per second limit 'i.e 5 req per minute'";
+        err.msg = "you have reached you per second limit 'i.e 5 req per 5 seconds'";
         next(err);
     } else {
         next();
