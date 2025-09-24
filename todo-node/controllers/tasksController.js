@@ -49,6 +49,11 @@ export async function getTasks(req, res){
 
 export const allRequests = async (req, res, next) => {
 
-    const { totalRequest } = req;
-    res.status(200).json(totalRequest);
+    const { totalRequest, errRequestsCount, successRequests } = req;
+    const requests = {
+        'Total Requests' : totalRequest,
+        'Error Requests' : errRequestsCount,
+        'Succes Requests' : successRequests,
+    }
+    res.status(200).json(requests);
 }

@@ -87,6 +87,7 @@ Returns all tasks stored in `data.json`.
 ### Request Count
 **GET /requests**  
 Returns the total number of requests received.
+Returns the total success & failure number of requests.
 
 ---
 

@@ -6,6 +6,7 @@ export const methodNotFound = function(req, res, next){
 }
 
 export const errorFromRoute = function(err, req, res, next){
+
     const { name, msg } = err;
     const { method } = req;
     if( name == "method_not_found" ) {
